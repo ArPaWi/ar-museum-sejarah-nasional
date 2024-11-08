@@ -1,35 +1,51 @@
 import React, { useState, useEffect } from "react";
 import {
   ViroARScene,
-  ViroVideo,
   ViroARSceneNavigator,
+  ViroVideo,
+  ViroARImageMarker,
+  ViroARTrackingTargets,
 } from "@reactvision/react-viro";
 import { useIsFocused } from "@react-navigation/native";
 
+ViroARTrackingTargets.createTargets({
+  proklamasiMarker: {
+    source: require("@/assets/images/markers/proklamasi.jpg"), // Gambar marker
+    orientation: "Up",
+    physicalWidth: 0.2, // Lebar fisik marker dalam meter
+  },
+});
+
 const HelloWorldARScene = () => {
+  const [videoVisible, setVideoVisible] = useState(false);
+
   return (
     <ViroARScene>
-      <ViroVideo
-        source={require("@/assets/videos/Proklamasi.mp4")}
-        loop={true}
-        position={[0, 0, -4]}
-        scale={[3, 2, 0]}
-      />
+      <ViroARImageMarker
+        target="proklamasiMarker"
+        onAnchorFound={() => setVideoVisible(true)}
+        onAnchorRemoved={() => setVideoVisible(false)}
+      >
+        {videoVisible && (
+          <ViroVideo
+            source={require("@/assets/videos/Proklamasi.mp4")}
+            loop={false}
+            position={[0, 0, 0]}
+            rotation={[-85, 0, 0]}
+            scale={[0.3, 0.2, 0]}
+          />
+        )}
+      </ViroARImageMarker>
     </ViroARScene>
   );
 };
 
 export default function ARScreen() {
-  const isFocused = useIsFocused(); // Mendapatkan status apakah tab aktif
-  const [showAR, setShowAR] = useState(true); // State untuk menampilkan ARScene
+  const isFocused = useIsFocused();
+  const [showAR, setShowAR] = useState(true);
 
-  // Mengontrol ARScene saat tab aktif/non-aktif
   useEffect(() => {
-    if (!isFocused) {
-      setShowAR(false);
-    } else {
-      setShowAR(true);
-    }
+    setShowAR(isFocused);
   }, [isFocused]);
 
   return (
