@@ -1,110 +1,160 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, Image, Platform } from "react-native";
+import { StyleSheet, Image, Platform, Dimensions } from "react-native";
 
 import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
+const { width: screenWidth } = Dimensions.get("window");
+
 export default function TabTwoScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
+      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
-        <Ionicons size={310} name="code-slash" style={styles.headerImage} />
+        <Image
+          source={require("@/assets/images/fotoProklamasi.jpg")}
+          style={styles.headerImage}
+        />
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">DAFTAR SEJARAH</ThemedText>
       </ThemedView>
-      <ThemedText>
-        This app includes example code to help you get started.
+      <ThemedText style={styles.caption}>
+        Aplikasi ini memiliki berbagai daftar peristiwa bersejarah di Indonesia.
       </ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{" "}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the
-          web version, press <ThemedText type="defaultSemiBold">w</ThemedText>{" "}
-          in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the{" "}
-          <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
-          provide files for different screen densities
+      <Collapsible title="Sumpah Pemuda">
+        <ThemedText style={styles.caption}>
+          Sumpah Pemuda adalah sebuah deklarasi yang diikrarkan oleh para pemuda
+          Indonesia pada 28 Oktober 1928, yang menyatakan tekad untuk bersatu
+          dalam satu tanah air, bangsa, dan bahasa. Peristiwa ini menjadi
+          tonggak penting dalam perjuangan kemerdekaan Indonesia, sebagai simbol
+          persatuan bangsa yang mengarah pada kemerdekaan dari penjajahan.
         </ThemedText>
         <Image
-          source={require("@/assets/images/react-logo.png")}
-          style={{ alignSelf: "center" }}
+          source={require("@/assets/images/markers/sumpahPemuda.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
         />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
       </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText>{" "}
-          to see how to load{" "}
-          <ThemedText style={{ fontFamily: "SpaceMono" }}>
-            custom fonts such as this one.
-          </ThemedText>
+      <Collapsible title="Romusha">
+        <ThemedText style={styles.caption}>
+          Romusha adalah sistem kerja paksa yang diterapkan oleh Jepang selama
+          penjajahan di Indonesia antara 1942-1945. Para pekerja paksa, yang
+          sebagian besar terdiri dari rakyat Indonesia, dipaksa untuk bekerja di
+          proyek-proyek Jepang seperti pembangunan jalur kereta api dan benteng
+          pertahanan dengan kondisi yang sangat berat dan banyak yang meninggal
+          akibat kelelahan dan penyiksaan.
         </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
+        <Image
+          source={require("@/assets/images/markers/romusya.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
       </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook
-          lets you inspect what the user's current color scheme is, and so you
-          can adjust UI colors accordingly.
+      <Collapsible title="Pemberontakan Tentara PETA">
+        <ThemedText style={styles.caption}>
+          Pemberontakan Tentara PETA (Pembela Tanah Air) yang terjadi pada 14
+          Februari 1945 di Blitar merupakan upaya dari anggota PETA untuk
+          melawan penjajahan Jepang yang semakin menindas. Pemberontakan ini
+          dipimpin oleh Letnan Supriyadi, namun gagal dan berakhir dengan
+          banyaknya korban, meskipun hal ini menjadi simbol perlawanan rakyat
+          Indonesia terhadap penjajah.
         </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
+        <Image
+          source={require("@/assets/images/markers/tentaraPETA.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
       </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">
-            components/HelloWave.tsx
-          </ThemedText>{" "}
-          component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">
-            react-native-reanimated
-          </ThemedText>{" "}
-          library to create a waving hand animation.
+      <Collapsible title="Proklamasi Kemerdekaan Indonesia">
+        <ThemedText style={styles.caption}>
+          Proklamasi Kemerdekaan Indonesia pada 17 Agustus 1945 merupakan momen
+          bersejarah di mana Indonesia menyatakan kemerdekaannya dari penjajahan
+          Jepang. Dikenal sebagai titik awal kemerdekaan Indonesia, proklamasi
+          ini dibacakan oleh Soekarno dan Hatta di Jakarta, yang kemudian
+          diikuti dengan pengakuan dunia atas kemerdekaan bangsa Indonesia.
         </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The{" "}
-              <ThemedText type="defaultSemiBold">
-                components/ParallaxScrollView.tsx
-              </ThemedText>{" "}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
+        <Image
+          source={require("@/assets/images/markers/proklamasi.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
+      </Collapsible>
+      <Collapsible title="Pengesahan Pancasila dan UUD 1945">
+        <ThemedText style={styles.caption}>
+          Pengesahan Pancasila sebagai dasar negara dan UUD 1945 pada 18 Agustus
+          1945 menandai langkah penting dalam pembentukan negara Indonesia
+          setelah kemerdekaan. Pada tanggal tersebut, telah disahkan Pancasila
+          sebagai dasar negara dan Undang-Undang Dasar 1945 sebagai konstitusi
+          negara yang berlaku, yang menjadi landasan bagi kehidupan berbangsa
+          dan bernegara di Indonesia.
+        </ThemedText>
+        <Image
+          source={require("@/assets/images/markers/pengesahanPancasila.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
+      </Collapsible>
+      <Collapsible title="Hari Lahir ABRI">
+        <ThemedText style={styles.caption}>
+          Hari Lahir ABRI (Angkatan Bersenjata Republik Indonesia) diperingati
+          pada 5 Oktober 1945, yang merupakan pembentukan tentara nasional
+          Indonesia setelah kemerdekaan. Pada tanggal ini, pemerintah Indonesia
+          menggabungkan berbagai kelompok militer yang ada, seperti Badan
+          Keamanan Rakyat (BKR) dan pasukan lainnya, menjadi angkatan bersenjata
+          yang terorganisir di bawah komando negara.
+        </ThemedText>
+        <Image
+          source={require("@/assets/images/markers/ABRI.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
+      </Collapsible>
+      <Collapsible title="Pertempuran Surabaya">
+        <ThemedText style={styles.caption}>
+          Pertempuran Surabaya pada 10 November 1945 adalah salah satu
+          pertempuran terbesar dalam sejarah perjuangan kemerdekaan Indonesia
+          setelah proklamasi kemerdekaan. Peristiwa ini terjadi ketika pasukan
+          Sekutu yang didukung oleh Inggris berusaha merebut Surabaya dari
+          tangan pejuang kemerdekaan Indonesia, yang akhirnya mengakibatkan
+          jatuhnya banyak korban jiwa di kedua belah pihak dan menjadikan 10
+          November sebagai Hari Pahlawan di Indonesia.
+        </ThemedText>
+        <Image
+          source={require("@/assets/images/markers/pertempuranSurabaya.jpg")}
+          style={{
+            alignSelf: "center",
+            width: screenWidth * 0.75,
+            height: undefined,
+            aspectRatio: 16 / 9,
+          }}
+        />
       </Collapsible>
     </ParallaxScrollView>
   );
@@ -112,13 +162,17 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
+    height: "100%",
+    width: "100%",
+    bottom: 0,
+    left: 0,
     position: "absolute",
   },
   titleContainer: {
     flexDirection: "row",
     gap: 8,
+  },
+  caption: {
+    textAlign: "justify",
   },
 });

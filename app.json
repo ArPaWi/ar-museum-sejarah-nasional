@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "ar-museum-sejarah-nasional",
+    "name": "AR Museum Sejarah Nasional",
     "slug": "ar-museum-sejarah-nasional",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appLogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/appLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
