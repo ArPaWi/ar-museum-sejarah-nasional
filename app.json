@@ -19,14 +19,17 @@
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos",
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to use your camera",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use your microphone"
-      }
+      },
+      "bundleIdentifier": "com.aryapanca.armuseumsejarahnasional",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.aryapanca.armuseumsejarahnasional"
+      "package": "com.aryapanca.armuseumsejarahnasional",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -34,11 +37,21 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      ["@react-native-firebase/app", {"ios": false}],
+      ["@react-native-firebase/auth", {"ios": false}],
+      ["@react-native-firebase/crashlytics", {"ios": false}],
+      ["@react-native-google-signin/google-signin", {
+        "ios": false,
+        "iosUrlScheme": "com.googleusercontent.apps.DUMMY_CLIENT_ID"
+      }],
       "expo-router",
       [
-        "@reactvision/react-viro", {
+        "@reactvision/react-viro",
+        {
           "android": {
-            "xRMode": ["AR"]
+            "xRMode": [
+              "AR"
+            ]
           }
         }
       ]

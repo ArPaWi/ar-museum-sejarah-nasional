@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'ar-museum-sejarah-nasional'
+rootProject.name = 'AR Museum Sejarah Nasional'
 
 dependencyResolutionManagement {
   versionCatalogs {
