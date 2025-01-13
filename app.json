@@ -37,13 +37,31 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      ["@react-native-firebase/app", {"ios": false}],
-      ["@react-native-firebase/auth", {"ios": false}],
-      ["@react-native-firebase/crashlytics", {"ios": false}],
-      ["@react-native-google-signin/google-signin", {
-        "ios": false,
-        "iosUrlScheme": "com.googleusercontent.apps.DUMMY_CLIENT_ID"
-      }],
+      [
+        "@react-native-firebase/app",
+        {
+          "ios": false
+        }
+      ],
+      [
+        "@react-native-firebase/auth",
+        {
+          "ios": false
+        }
+      ],
+      [
+        "@react-native-firebase/crashlytics",
+        {
+          "ios": false
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "ios": false,
+          "iosUrlScheme": "com.googleusercontent.apps.DUMMY_CLIENT_ID"
+        }
+      ],
       "expo-router",
       [
         "@reactvision/react-viro",
@@ -58,6 +76,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "41bc3005-a16f-4b61-96db-2d645464c804"
+      }
     }
   }
 }
