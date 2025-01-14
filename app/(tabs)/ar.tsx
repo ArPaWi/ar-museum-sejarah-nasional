@@ -9,6 +9,7 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { View } from "react-native-reanimated/lib/typescript/Animated";
 
 type Histories = {
   id: number;
@@ -37,13 +38,17 @@ const HelloWorldARScene = () => {
         onAnchorRemoved={() => setVideoVisible(false)}
       >
         {videoVisible && (
-          <ViroVideo
-            source={require("@/assets/videos/Proklamasi.mp4")}
-            loop={false}
-            position={[0, 0, 0]}
-            rotation={[-85, 0, 0]}
-            scale={[0.3, 0.2, 0]}
-          />
+          <>
+            <ViroVideo
+              source={{
+                uri: "https://drive.google.com/uc?export=download&id=1vMd-Lg97GnRyH4-T6T4C5DZ7IJloyxme",
+              }}
+              loop={false}
+              position={[0, 0, 0]}
+              rotation={[-85, 0, 0]}
+              scale={[0.3, 0.2, 0]}
+            />
+          </>
         )}
       </ViroARImageMarker>
     </ViroARScene>
@@ -53,7 +58,7 @@ const HelloWorldARScene = () => {
 export default function ARScreen() {
   const isFocused = useIsFocused();
   const [showAR, setShowAR] = useState(true);
-  const [histories, setHistories] = useState<Histories[]>([]); // Menyimpan data users
+  const [histories, setHistories] = useState<Histories[]>([]);
 
   // Fungsi untuk mengambil data dari Firestore
   useEffect(() => {
