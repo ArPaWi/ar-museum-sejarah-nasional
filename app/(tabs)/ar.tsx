@@ -20,35 +20,96 @@ type Histories = {
 };
 
 ViroARTrackingTargets.createTargets({
+  petaMarker: {
+    source: require("@/assets/images/markers/tentaraPETA.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
   proklamasiMarker: {
     source: require("@/assets/images/markers/proklamasi.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
+  pancasilaMarker: {
+    source: require("@/assets/images/markers/pengesahanPancasila.jpg"),
     orientation: "Up",
     physicalWidth: 0.2,
   },
 });
 
 const HelloWorldARScene = () => {
-  const [videoVisible, setVideoVisible] = useState(false);
+  const [videoVisible, setVideoVisible] = useState<{
+    [key: string]: boolean;
+  }>({
+    petaMarker: false,
+    proklamasiMarker: false,
+    pancasilaMarker: false,
+  });
+
+  const handleAnchorFound = (markerName: string) => {
+    setVideoVisible((prev) => ({ ...prev, [markerName]: true }));
+  };
+
+  const handleAnchorRemoved = (markerName: string) => {
+    setVideoVisible((prev) => ({ ...prev, [markerName]: false }));
+  };
 
   return (
     <ViroARScene>
       <ViroARImageMarker
-        target="proklamasiMarker"
-        onAnchorFound={() => setVideoVisible(true)}
-        onAnchorRemoved={() => setVideoVisible(false)}
+        target="petaMarker"
+        onAnchorFound={() => handleAnchorFound("petaMarker")}
+        onAnchorRemoved={() => handleAnchorRemoved("petaMarker")}
       >
-        {videoVisible && (
-          <>
-            <ViroVideo
-              source={{
-                uri: "https://drive.google.com/uc?export=download&id=1vMd-Lg97GnRyH4-T6T4C5DZ7IJloyxme",
-              }}
-              loop={false}
-              position={[0, 0, 0]}
-              rotation={[-85, 0, 0]}
-              scale={[0.3, 0.2, 0]}
-            />
-          </>
+        {videoVisible["petaMarker"] && (
+          <ViroVideo
+            source={{
+              uri: "https://drive.google.com/uc?export=download&id=17_NuQfeeKC3RbAO4J3s3WZEdIKKXfkuZ",
+            }}
+            loop={false}
+            position={[0, 0, 0]}
+            rotation={[-85, 0, 0]}
+            scale={[0.1, 0.23, 0]}
+            onFinish={() => handleAnchorRemoved("petaMarker")}
+          />
+        )}
+      </ViroARImageMarker>
+
+      <ViroARImageMarker
+        target="proklamasiMarker"
+        onAnchorFound={() => handleAnchorFound("proklamasiMarker")}
+        onAnchorRemoved={() => handleAnchorRemoved("proklamasiMarker")}
+      >
+        {videoVisible["proklamasiMarker"] && (
+          <ViroVideo
+            source={{
+              uri: "https://drive.google.com/uc?export=download&id=17W_Y7OOCsCkbPZucyf7aQArVXlWJAKvr",
+            }}
+            loop={false}
+            position={[0, 0, 0]}
+            rotation={[-85, 0, 0]}
+            scale={[0.1, 0.23, 0]}
+            onFinish={() => handleAnchorRemoved("proklamasiMarker")}
+          />
+        )}
+      </ViroARImageMarker>
+
+      <ViroARImageMarker
+        target="pancasilaMarker"
+        onAnchorFound={() => handleAnchorFound("pancasilaMarker")}
+        onAnchorRemoved={() => handleAnchorRemoved("pancasilaMarker")}
+      >
+        {videoVisible["pancasilaMarker"] && (
+          <ViroVideo
+            source={{
+              uri: "https://drive.google.com/uc?export=download&id=17aSk_9LMlhMvrBwbXAbC-mHi_hc1_U2i",
+            }}
+            loop={false}
+            position={[0, 0, 0]}
+            rotation={[-85, 0, 0]}
+            scale={[0.1, 0.23, 0]}
+            onFinish={() => handleAnchorRemoved("pancasilaMarker")}
+          />
         )}
       </ViroARImageMarker>
     </ViroARScene>
