@@ -5,6 +5,9 @@ import {
   Dimensions,
   View,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import {
   GoogleSignin,
@@ -15,12 +18,14 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 export default function HomeScreen() {
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -90,8 +95,40 @@ export default function HomeScreen() {
       <ThemedView>
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="title">Selamat Datang!</ThemedText>
-          <HelloWave />
+          {/* <HelloWave /> */}
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Ionicons name="help-circle-outline" size={40} color="blue" />
+          </TouchableOpacity>
         </ThemedView>
+        <View style={styles.container}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>
+                  Selamat datang di AR Museum Sejarah Nasional!
+                </Text>
+                <Text style={styles.modalText}>
+                  Aplikasi ini menggunakan teknologi Augmented Reality untuk
+                  menghadirkan sejarah Indonesia secara interaktif.{"\n\n"}
+                  Dikembangkan oleh:{"\n"}
+                  Arya Panca Wibowo{"\n"}
+                  aryapancawibowo56@gmail.com
+                </Text>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  style={styles.closeButton}
+                >
+                  <Text style={styles.closeText}>Tutup</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <View style={styles.bannerContainer}>
           <Image
             source={require("@/assets/images/banner/sumpahPemuda.png")}
@@ -162,4 +199,32 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 4 / 1.5,
   },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: { fontSize: 16, marginBottom: 10, textAlign: "center" },
+  closeButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#007bff",
+    borderRadius: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    textAlign: "center",
+    marginBottom: 20,
+    fontWeight: "bold",
+  },
+  closeText: { color: "white", fontWeight: "bold" },
 });
