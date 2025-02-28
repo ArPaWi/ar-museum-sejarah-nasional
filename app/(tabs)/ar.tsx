@@ -7,14 +7,13 @@ import {
   ViroARTrackingTargets,
 } from "@reactvision/react-viro";
 import { useIsFocused } from "@react-navigation/native";
-import firestore from "@react-native-firebase/firestore";
+import firestore, { Timestamp } from "@react-native-firebase/firestore";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { View } from "react-native-reanimated/lib/typescript/Animated";
 
 type Histories = {
-  id: number;
   name: string;
-  desc: string;
+  marker: string;
   quizId: FirebaseFirestoreTypes.DocumentReference | null;
   videoId: FirebaseFirestoreTypes.DocumentReference | null;
 };
@@ -35,19 +34,103 @@ ViroARTrackingTargets.createTargets({
     orientation: "Up",
     physicalWidth: 0.2,
   },
+  abriMarker: {
+    source: require("@/assets/images/markers/ABRI.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
+  surabayaMarker: {
+    source: require("@/assets/images/markers/pertempuranSurabaya.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
+  romushaMarker: {
+    source: require("@/assets/images/markers/romusya.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
+  sumpahPemudaMarker: {
+    source: require("@/assets/images/markers/sumpahPemuda.jpg"),
+    orientation: "Up",
+    physicalWidth: 0.2,
+  },
 });
 
 const HelloWorldARScene = () => {
-  const [videoVisible, setVideoVisible] = useState<{
-    [key: string]: boolean;
-  }>({
+  const [videoVisible, setVideoVisible] = useState<{ [key: string]: boolean }>({
     petaMarker: false,
     proklamasiMarker: false,
     pancasilaMarker: false,
+    abriMarker: false,
+    surabayaMarker: false,
+    romushaMarker: false,
+    sumpahPemudaMarker: false,
   });
 
-  const handleAnchorFound = (markerName: string) => {
+  const [videoUrls, setVideoUrls] = useState<{ [key: string]: string | null }>(
+    {}
+  );
+
+  const [quiz, setQuiz] = useState<{ [key: string]: string | null }>({});
+
+  const handleAnchorFound = async (markerName: string) => {
+    const startTime = performance.now();
     setVideoVisible((prev) => ({ ...prev, [markerName]: true }));
+
+    try {
+      const historiesRef = firestore().collection("histories");
+      const querySnapshot = await historiesRef
+        .where("marker", "==", markerName)
+        .get();
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          const data = doc.data();
+          console.log("Sejarah: ", data.name);
+          console.log("Marker: ", data.marker);
+
+          if (data.videoId) {
+            const videoDoc = await data.videoId.get();
+            if (videoDoc.exists) {
+              const videoData = videoDoc.data();
+              console.log("URL Video:", videoData);
+
+              setVideoUrls((prev) => ({
+                ...prev,
+                [markerName]: videoData.url,
+              }));
+            } else {
+              console.log("Video document not found for marker:", markerName);
+            }
+          }
+
+          if (data.quizId) {
+            const quizDoc = await data.quizId.get();
+            if (quizDoc.exists) {
+              const quizData = quizDoc.data();
+              console.log("Quiz:", quizData);
+
+              setQuiz((prev) => ({
+                ...prev,
+                [markerName]: quizData.quiz,
+              }));
+            } else {
+              console.log("Quiz document not found for marker:", markerName);
+            }
+          }
+        });
+        const endTime = performance.now(); // Catat waktu aplikasi mengenali marker
+        console.log(
+          `Marker "${markerName}" dikenali dalam ${(
+            endTime - startTime
+          ).toFixed(2)} ms`
+        );
+      } else {
+        console.log("Tidak ada data history untuk marker:", markerName);
+      }
+    } catch (error) {
+      console.error("Error fetching history:", error);
+    }
   };
 
   const handleAnchorRemoved = (markerName: string) => {
@@ -56,62 +139,25 @@ const HelloWorldARScene = () => {
 
   return (
     <ViroARScene>
-      <ViroARImageMarker
-        target="petaMarker"
-        onAnchorFound={() => handleAnchorFound("petaMarker")}
-        onAnchorRemoved={() => handleAnchorRemoved("petaMarker")}
-      >
-        {videoVisible["petaMarker"] && (
-          <ViroVideo
-            source={{
-              uri: "https://drive.google.com/uc?export=download&id=17_NuQfeeKC3RbAO4J3s3WZEdIKKXfkuZ",
-            }}
-            loop={false}
-            position={[0, 0, 0]}
-            rotation={[-85, 0, 0]}
-            scale={[0.1, 0.23, 0]}
-            onFinish={() => handleAnchorRemoved("petaMarker")}
-          />
-        )}
-      </ViroARImageMarker>
-
-      <ViroARImageMarker
-        target="proklamasiMarker"
-        onAnchorFound={() => handleAnchorFound("proklamasiMarker")}
-        onAnchorRemoved={() => handleAnchorRemoved("proklamasiMarker")}
-      >
-        {videoVisible["proklamasiMarker"] && (
-          <ViroVideo
-            source={{
-              uri: "https://drive.google.com/uc?export=download&id=17W_Y7OOCsCkbPZucyf7aQArVXlWJAKvr",
-            }}
-            loop={false}
-            position={[0, 0, 0]}
-            rotation={[-85, 0, 0]}
-            scale={[0.1, 0.23, 0]}
-            onFinish={() => handleAnchorRemoved("proklamasiMarker")}
-          />
-        )}
-      </ViroARImageMarker>
-
-      <ViroARImageMarker
-        target="pancasilaMarker"
-        onAnchorFound={() => handleAnchorFound("pancasilaMarker")}
-        onAnchorRemoved={() => handleAnchorRemoved("pancasilaMarker")}
-      >
-        {videoVisible["pancasilaMarker"] && (
-          <ViroVideo
-            source={{
-              uri: "https://drive.google.com/uc?export=download&id=17aSk_9LMlhMvrBwbXAbC-mHi_hc1_U2i",
-            }}
-            loop={false}
-            position={[0, 0, 0]}
-            rotation={[-85, 0, 0]}
-            scale={[0.1, 0.23, 0]}
-            onFinish={() => handleAnchorRemoved("pancasilaMarker")}
-          />
-        )}
-      </ViroARImageMarker>
+      {Object.keys(videoVisible).map((markerName) => (
+        <ViroARImageMarker
+          key={markerName}
+          target={markerName}
+          onAnchorFound={() => handleAnchorFound(markerName)}
+          onAnchorRemoved={() => handleAnchorRemoved(markerName)}
+        >
+          {videoVisible[markerName] && videoUrls[markerName] && (
+            <ViroVideo
+              source={{ uri: videoUrls[markerName] }}
+              loop={false}
+              position={[0, 0, 0]}
+              rotation={[-85, 0, 0]}
+              scale={[0.2, 0.09, 0]}
+              onFinish={() => handleAnchorRemoved(markerName)}
+            />
+          )}
+        </ViroARImageMarker>
+      ))}
     </ViroARScene>
   );
 };
@@ -119,54 +165,6 @@ const HelloWorldARScene = () => {
 export default function ARScreen() {
   const isFocused = useIsFocused();
   const [showAR, setShowAR] = useState(true);
-  const [histories, setHistories] = useState<Histories[]>([]);
-
-  // Fungsi untuk mengambil data dari Firestore
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await firestore().collection("histories").get();
-        const historyList = await Promise.all(
-          querySnapshot.docs.map(async (doc) => {
-            const data = doc.data();
-
-            // Ambil data dari videoId (referensi dokumen)
-            let videoData = null;
-            if (data.videoId?.get) {
-              const videoDoc = await data.videoId.get();
-              videoData = videoDoc.exists ? videoDoc.data() : null;
-            }
-
-            // Ambil data dari quizId (referensi dokumen)
-            let quizData = null;
-            if (data.quizId && typeof data.quizId.get === "function") {
-              const quizDoc = await data.quizId.get();
-              quizData = quizDoc.exists ? quizDoc.data() : null;
-            } else {
-              console.warn(
-                `Quiz reference is not valid for history ID: ${data.id}`
-              );
-            }
-
-            return {
-              id: data.id,
-              name: data.name,
-              desc: data.desc,
-              quiz: quizData, // Data dari referensi quizId
-              video: videoData, // Data dari referensi videoId
-            } as Histories & { quiz: any; video: any };
-          })
-        );
-
-        console.log("History List:", JSON.stringify(historyList, null, 2)); // Tampilkan data ke console
-        setHistories(historyList); // Set state dengan data yang diambil
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     setShowAR(isFocused);
