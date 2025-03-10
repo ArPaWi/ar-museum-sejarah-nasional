@@ -97,7 +97,7 @@ export default function HomeScreen() {
           <ThemedText type="title">Selamat Datang!</ThemedText>
           {/* <HelloWave /> */}
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Ionicons name="help-circle-outline" size={40} color="blue" />
+            <Ionicons name="help-circle-outline" size={40} color="orange" />
           </TouchableOpacity>
         </ThemedView>
         <View style={styles.container}>
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: "#007bff",
+    backgroundColor: "#e76800",
     borderRadius: 5,
   },
   modalTitle: {

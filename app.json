@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AR Museum Sejarah Nasional",
-    "slug": "ar-museum-sejarah-nasional",
+    "name": "ARMusnas",
+    "slug": "armusnas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/appLogo.png",
@@ -34,7 +34,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/appLogo.png"
     },
     "plugins": [
       [

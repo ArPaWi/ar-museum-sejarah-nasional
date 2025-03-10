@@ -56,7 +56,7 @@ ViroARTrackingTargets.createTargets({
   },
 });
 
-const HelloWorldARScene = () => {
+const ARScene = () => {
   const [videoVisible, setVideoVisible] = useState<{ [key: string]: boolean }>({
     petaMarker: false,
     proklamasiMarker: false,
@@ -171,10 +171,6 @@ export default function ARScreen() {
   }, [isFocused]);
 
   return (
-    <>
-      {showAR && (
-        <ViroARSceneNavigator initialScene={{ scene: HelloWorldARScene }} />
-      )}
-    </>
+    <>{showAR && <ViroARSceneNavigator initialScene={{ scene: ARScene }} />}</>
   );
 }

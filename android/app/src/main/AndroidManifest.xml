@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -14,6 +17,9 @@
     <package android:name="com.google.ar.core"/>
   </queries>
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme">
+    <meta-data android:name="com.google.ar.core" android:value="optional"/>
+    <meta-data android:name="com.google.ar.core" android:value="optional"/>
+    <meta-data android:name="com.google.ar.core" android:value="optional"/>
     <meta-data android:name="com.google.ar.core" android:value="optional"/>
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
@@ -30,6 +36,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.aryapanca.armuseumsejarahnasional"/>
         <data android:scheme="exp+ar-museum-sejarah-nasional"/>
+        <data android:scheme="exp+armusnas"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
