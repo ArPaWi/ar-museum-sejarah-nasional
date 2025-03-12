@@ -9,7 +9,7 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import firestore, { Timestamp } from "@react-native-firebase/firestore";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 type Histories = {
   name: string;
@@ -56,7 +56,11 @@ ViroARTrackingTargets.createTargets({
   },
 });
 
-const ARScene = () => {
+const ARScene = ({
+  onQuizTrigger,
+}: {
+  onQuizTrigger: (quizData: any) => void;
+}) => {
   const [videoVisible, setVideoVisible] = useState<{ [key: string]: boolean }>({
     petaMarker: false,
     proklamasiMarker: false,
@@ -70,8 +74,7 @@ const ARScene = () => {
   const [videoUrls, setVideoUrls] = useState<{ [key: string]: string | null }>(
     {}
   );
-
-  const [quiz, setQuiz] = useState<{ [key: string]: string | null }>({});
+  const [quiz, setQuiz] = useState<{ [key: string]: any[] }>({});
 
   const handleAnchorFound = async (markerName: string) => {
     const startTime = performance.now();
@@ -135,6 +138,13 @@ const ARScene = () => {
 
   const handleAnchorRemoved = (markerName: string) => {
     setVideoVisible((prev) => ({ ...prev, [markerName]: false }));
+
+    // Cek apakah ada kuis untuk marker tersebut
+    const quizList = quiz[markerName];
+    if (quizList && quizList.length > 0) {
+      const randomQuiz = quizList[Math.floor(Math.random() * quizList.length)];
+      onQuizTrigger(randomQuiz); // Kirim event ke ARScreen
+    }
   };
 
   return (
@@ -162,15 +172,127 @@ const ARScene = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  questionText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  optionButton: {
+    width: "100%",
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#f0f0f0",
+    borderWidth: 1,
+    borderColor: "#e76800",
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  optionText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
+  feedbackText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "green",
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#e76800",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+});
+
 export default function ARScreen() {
   const isFocused = useIsFocused();
   const [showAR, setShowAR] = useState(true);
+
+  const [currentQuiz, setCurrentQuiz] = useState<any>(null);
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const handleQuizTrigger = (quizData: any) => {
+    setCurrentQuiz(quizData);
+    setShowQuizModal(true);
+    setSelectedAnswer(null);
+  };
+
+  const handleAnswer = (answer: string) => {
+    setSelectedAnswer(answer);
+  };
+
+  const closeQuizModal = () => {
+    setShowQuizModal(false);
+    setSelectedAnswer(null);
+  };
 
   useEffect(() => {
     setShowAR(isFocused);
   }, [isFocused]);
 
   return (
-    <>{showAR && <ViroARSceneNavigator initialScene={{ scene: ARScene }} />}</>
+    <>
+      {showAR && (
+        <ViroARSceneNavigator
+          initialScene={{
+            scene: () => <ARScene onQuizTrigger={handleQuizTrigger} />,
+          }}
+        />
+      )}
+
+      <Modal visible={showQuizModal} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.questionText}>{currentQuiz?.question}</Text>
+            {currentQuiz?.options.map((option: string, index: number) => {
+              let backgroundColor = "#ffffff";
+              if (selectedAnswer) {
+                if (option === currentQuiz.answer) {
+                  backgroundColor = "#4CAF50";
+                } else if (option === selectedAnswer) {
+                  backgroundColor = "#F44336";
+                }
+              }
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.optionButton, { backgroundColor }]}
+                  onPress={() => handleAnswer(option)}
+                  disabled={!!selectedAnswer}
+                >
+                  <Text style={styles.optionText}>{option}</Text>
+                </TouchableOpacity>
+              );
+            })}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={closeQuizModal}
+            >
+              <Text style={styles.closeButtonText}>Tutup</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 }
