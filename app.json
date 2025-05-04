@@ -1,11 +1,7 @@
 {
   "expo": {
     "name": "ARMusnas",
-    "slug": "armusnas",
-    "updates": {
-      "enabled": true,
-      "fallbackToCacheTimeout": 0
-    },
+    "slug": "ar-museum-sejarah-nasional",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/appLogo.png",
@@ -28,12 +24,17 @@
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
+      "enableProguardInReleaseBuilds": true,
+      "jsEngine": "hermes",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.aryapanca.armuseumsejarahnasional",
       "googleServicesFile": "./google-services.json"
+    },
+    "updates": {
+      "enabled": false
     },
     "web": {
       "bundler": "metro",
@@ -88,6 +89,7 @@
       "eas": {
         "projectId": "41bc3005-a16f-4b61-96db-2d645464c804"
       }
-    }
+    },
+    "developmentClient": false
   }
 }
