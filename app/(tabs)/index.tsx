@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import {
   Image,
   StyleSheet,
@@ -23,6 +24,12 @@ import { Ionicons } from "@expo/vector-icons";
 const { width: screenWidth } = Dimensions.get("window");
 
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const handleBannerPress = (markerKey: string) => {
+    router.push(`/demo-ar?markerKey=${markerKey}`);
+  };
+
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -95,7 +102,6 @@ export default function HomeScreen() {
       <ThemedView>
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="title">Selamat Datang!</ThemedText>
-          {/* <HelloWave /> */}
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Ionicons name="help-circle-outline" size={40} color="orange" />
           </TouchableOpacity>
@@ -130,41 +136,61 @@ export default function HomeScreen() {
           </Modal>
         </View>
         <View style={styles.bannerContainer}>
-          <Image
-            source={require("@/assets/images/banner/sumpahPemuda.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/romusya.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/pemberontakanPETA.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/proklamasiKemerdekaan.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/pengesahanPancasiladanUUD.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/hariLahirABRI.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
-          <Image
-            source={require("@/assets/images/banner/pertempuranSurabaya.png")}
-            style={styles.banner}
-            resizeMode="contain"
-          />
+          <TouchableOpacity
+            onPress={() => handleBannerPress("sumpahPemudaMarker")}
+          >
+            <Image
+              source={require("@/assets/images/banner/sumpahPemuda.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleBannerPress("romushaMarker")}>
+            <Image
+              source={require("@/assets/images/banner/romusya.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleBannerPress("petaMarker")}>
+            <Image
+              source={require("@/assets/images/banner/pemberontakanPETA.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleBannerPress("proklamasiMarker")}
+          >
+            <Image
+              source={require("@/assets/images/banner/proklamasiKemerdekaan.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleBannerPress("pancasilaMarker")}
+          >
+            <Image
+              source={require("@/assets/images/banner/pengesahanPancasiladanUUD.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleBannerPress("abriMarker")}>
+            <Image
+              source={require("@/assets/images/banner/hariLahirABRI.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleBannerPress("surabayaMarker")}>
+            <Image
+              source={require("@/assets/images/banner/pertempuranSurabaya.png")}
+              style={styles.banner}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
       </ThemedView>
     </ParallaxScrollView>

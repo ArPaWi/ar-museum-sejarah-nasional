@@ -6,11 +6,20 @@ import {
   ViroARImageMarker,
   ViroARTrackingTargets,
 } from "@reactvision/react-viro";
-import { useIsFocused } from "@react-navigation/native";
-import firestore, { Timestamp } from "@react-native-firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Audio } from "expo-av";
+import correctSound from "@/assets/audio/correct.mp3";
+import wrongSound from "@/assets/audio/wrong.mp3";
 
+export const unstable_settings = {
+  unmountOnBlur: true,
+};
+
+/**
+ * Type for historical data structure
+ */
 type Histories = {
   name: string;
   marker: string;
@@ -18,64 +27,59 @@ type Histories = {
   videoId: FirebaseFirestoreTypes.DocumentReference | null;
 };
 
-ViroARTrackingTargets.createTargets({
-  petaMarker: {
-    source: require("@/assets/images/markers/tentaraPETA.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  proklamasiMarker: {
-    source: require("@/assets/images/markers/proklamasi.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  pancasilaMarker: {
-    source: require("@/assets/images/markers/pengesahanPancasila.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  abriMarker: {
-    source: require("@/assets/images/markers/ABRI.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  surabayaMarker: {
-    source: require("@/assets/images/markers/pertempuranSurabaya.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  romushaMarker: {
-    source: require("@/assets/images/markers/romusya.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
-  sumpahPemudaMarker: {
-    source: require("@/assets/images/markers/sumpahPemuda.jpg"),
-    orientation: "Up",
-    physicalWidth: 0.2,
-  },
+/**
+ * Define AR image tracking targets with corresponding markers
+ */
+const markerList = [
+  "petaMarker",
+  "proklamasiMarker",
+  "pancasilaMarker",
+  "abriMarker",
+  "surabayaMarker",
+  "romushaMarker",
+  "sumpahPemudaMarker",
+];
+
+const markerImages: { [key: string]: any } = {
+  petaMarker: require("@/assets/images/markers/tentaraPETA.jpg"),
+  proklamasiMarker: require("@/assets/images/markers/proklamasi.jpg"),
+  pancasilaMarker: require("@/assets/images/markers/pengesahanPancasila.jpg"),
+  abriMarker: require("@/assets/images/markers/ABRI.jpg"),
+  surabayaMarker: require("@/assets/images/markers/pertempuranSurabaya.jpg"),
+  romushaMarker: require("@/assets/images/markers/romusya.jpg"),
+  sumpahPemudaMarker: require("@/assets/images/markers/sumpahPemuda.jpg"),
+};
+
+markerList.forEach((marker) => {
+  ViroARTrackingTargets.createTargets({
+    [marker]: {
+      source: markerImages[marker],
+      orientation: "Up",
+      physicalWidth: 0.2,
+    },
+  });
 });
 
+/**
+ * Component that renders the AR scene and handles marker events
+ */
 const ARScene = ({
   onQuizTrigger,
 }: {
   onQuizTrigger: (quizData: any) => void;
 }) => {
-  const [videoVisible, setVideoVisible] = useState<{ [key: string]: boolean }>({
-    petaMarker: false,
-    proklamasiMarker: false,
-    pancasilaMarker: false,
-    abriMarker: false,
-    surabayaMarker: false,
-    romushaMarker: false,
-    sumpahPemudaMarker: false,
-  });
+  const [videoVisible, setVideoVisible] = useState<{ [key: string]: boolean }>(
+    Object.fromEntries(markerList.map((m) => [m, false]))
+  );
 
   const [videoUrls, setVideoUrls] = useState<{ [key: string]: string | null }>(
     {}
   );
   const [quiz, setQuiz] = useState<{ [key: string]: any[] }>({});
 
+  /**
+   * Event handler for when a marker is detected
+   */
   const handleAnchorFound = async (markerName: string) => {
     const startTime = performance.now();
     setVideoVisible((prev) => ({ ...prev, [markerName]: true }));
@@ -89,21 +93,15 @@ const ARScene = ({
       if (!querySnapshot.empty) {
         querySnapshot.forEach(async (doc) => {
           const data = doc.data();
-          console.log("Sejarah: ", data.name);
-          console.log("Marker: ", data.marker);
 
           if (data.videoId) {
             const videoDoc = await data.videoId.get();
             if (videoDoc.exists) {
               const videoData = videoDoc.data();
-              console.log("URL Video:", videoData);
-
               setVideoUrls((prev) => ({
                 ...prev,
                 [markerName]: videoData.url,
               }));
-            } else {
-              console.log("Video document not found for marker:", markerName);
             }
           }
 
@@ -111,45 +109,39 @@ const ARScene = ({
             const quizDoc = await data.quizId.get();
             if (quizDoc.exists) {
               const quizData = quizDoc.data();
-              console.log("Quiz:", quizData);
-
-              setQuiz((prev) => ({
-                ...prev,
-                [markerName]: quizData.quiz,
-              }));
-            } else {
-              console.log("Quiz document not found for marker:", markerName);
+              setQuiz((prev) => ({ ...prev, [markerName]: quizData.quiz }));
             }
           }
         });
-        const endTime = performance.now(); // Catat waktu aplikasi mengenali marker
+
+        const endTime = performance.now();
         console.log(
           `Marker "${markerName}" dikenali dalam ${(
             endTime - startTime
           ).toFixed(2)} ms`
         );
-      } else {
-        console.log("Tidak ada data history untuk marker:", markerName);
       }
     } catch (error) {
       console.error("Error fetching history:", error);
     }
   };
 
+  /**
+   * Event handler for when a marker is removed
+   */
   const handleAnchorRemoved = (markerName: string) => {
     setVideoVisible((prev) => ({ ...prev, [markerName]: false }));
-
-    // Cek apakah ada kuis untuk marker tersebut
+    setVideoUrls((prev) => ({ ...prev, [markerName]: null }));
     const quizList = quiz[markerName];
     if (quizList && quizList.length > 0) {
       const randomQuiz = quizList[Math.floor(Math.random() * quizList.length)];
-      onQuizTrigger(randomQuiz); // Kirim event ke ARScreen
+      onQuizTrigger(randomQuiz);
     }
   };
 
   return (
     <ViroARScene>
-      {Object.keys(videoVisible).map((markerName) => (
+      {markerList.map((markerName) => (
         <ViroARImageMarker
           key={markerName}
           target={markerName}
@@ -172,6 +164,9 @@ const ARScene = ({
   );
 };
 
+/**
+ * Styles for modal and quiz interface
+ */
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -222,13 +217,19 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Main screen component that manages AR and quiz display
+ */
 export default function ARScreen() {
-  const isFocused = useIsFocused();
   const [showAR, setShowAR] = useState(true);
-
   const [currentQuiz, setCurrentQuiz] = useState<any>(null);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const playSound = async (soundFile: any) => {
+    const { sound } = await Audio.Sound.createAsync(soundFile);
+    await sound.playAsync();
+  };
 
   const handleQuizTrigger = (quizData: any) => {
     setCurrentQuiz(quizData);
@@ -236,8 +237,13 @@ export default function ARScreen() {
     setSelectedAnswer(null);
   };
 
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = async (answer: string) => {
     setSelectedAnswer(answer);
+    if (answer === currentQuiz?.answer) {
+      await playSound(correctSound);
+    } else {
+      await playSound(wrongSound);
+    }
   };
 
   const closeQuizModal = () => {
@@ -245,16 +251,16 @@ export default function ARScreen() {
     setSelectedAnswer(null);
   };
 
-  useEffect(() => {
-    setShowAR(isFocused);
-  }, [isFocused]);
-
   return (
     <>
       {showAR && (
         <ViroARSceneNavigator
+          key={showAR ? "AR_ON" : "AR_OFF"}
           initialScene={{
             scene: () => <ARScene onQuizTrigger={handleQuizTrigger} />,
+          }}
+          viroAppProps={{
+            isActive: showAR,
           }}
         />
       )}
@@ -272,7 +278,6 @@ export default function ARScreen() {
                   backgroundColor = "#F44336";
                 }
               }
-
               return (
                 <TouchableOpacity
                   key={index}

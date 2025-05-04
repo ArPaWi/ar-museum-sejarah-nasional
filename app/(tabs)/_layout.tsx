@@ -30,6 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ar"
         options={{
+          unmountOnBlur: true,
           title: "AR",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
