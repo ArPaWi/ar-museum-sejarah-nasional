@@ -110,7 +110,7 @@ const DemoARPage = () => {
   const closeQuizModal = () => {
     setShowQuizModal(false);
     setSelectedAnswer(null);
-    router.push("/");
+    router.replace("/");
   };
   const arKey = `ar-scene-${markerKey}`;
 

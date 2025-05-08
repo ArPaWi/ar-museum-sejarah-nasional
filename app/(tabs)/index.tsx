@@ -15,7 +15,6 @@ import {
   SignInSuccessResponse,
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
-import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -78,6 +77,7 @@ export default function HomeScreen() {
       setUser(auth().currentUser);
     } catch (error) {
       console.error("Gagal login dengan Google:", error);
+      router.replace("/login");
     }
   };
 
