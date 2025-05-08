@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { router, useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  BackHandler,
+} from "react-native";
 import {
   ViroARScene,
   ViroARSceneNavigator,
@@ -110,14 +117,28 @@ const DemoARPage = () => {
   const closeQuizModal = () => {
     setShowQuizModal(false);
     setSelectedAnswer(null);
-    router.replace("/");
+    router.push("/");
   };
   const arKey = `ar-scene-${markerKey}`;
 
   useFocusEffect(
     useCallback(() => {
-      return () => {};
-    }, [])
+      const onBackPress = () => {
+        if (showQuizModal) {
+          setShowQuizModal(false);
+          setSelectedAnswer(null);
+          return true;
+        }
+
+        router.push("/");
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [showQuizModal])
   );
 
   return (

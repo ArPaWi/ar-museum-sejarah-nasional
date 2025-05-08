@@ -17,9 +17,6 @@ export const unstable_settings = {
   unmountOnBlur: true,
 };
 
-/**
- * Type for historical data structure
- */
 type Histories = {
   name: string;
   marker: string;
@@ -27,9 +24,6 @@ type Histories = {
   videoId: FirebaseFirestoreTypes.DocumentReference | null;
 };
 
-/**
- * Define AR image tracking targets with corresponding markers
- */
 const markerList = [
   "petaMarker",
   "proklamasiMarker",
@@ -60,9 +54,6 @@ markerList.forEach((marker) => {
   });
 });
 
-/**
- * Component that renders the AR scene and handles marker events
- */
 const ARScene = ({
   onQuizTrigger,
 }: {
@@ -77,9 +68,6 @@ const ARScene = ({
   );
   const [quiz, setQuiz] = useState<{ [key: string]: any[] }>({});
 
-  /**
-   * Event handler for when a marker is detected
-   */
   const handleAnchorFound = async (markerName: string) => {
     const startTime = performance.now();
     setVideoVisible((prev) => ({ ...prev, [markerName]: true }));
@@ -126,9 +114,6 @@ const ARScene = ({
     }
   };
 
-  /**
-   * Event handler for when a marker is removed
-   */
   const handleAnchorRemoved = (markerName: string) => {
     setVideoVisible((prev) => ({ ...prev, [markerName]: false }));
     setVideoUrls((prev) => ({ ...prev, [markerName]: null }));
@@ -164,9 +149,6 @@ const ARScene = ({
   );
 };
 
-/**
- * Styles for modal and quiz interface
- */
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -217,9 +199,6 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * Main screen component that manages AR and quiz display
- */
 export default function ARScreen() {
   const [showAR, setShowAR] = useState(true);
   const [currentQuiz, setCurrentQuiz] = useState<any>(null);

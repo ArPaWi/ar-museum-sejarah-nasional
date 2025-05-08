@@ -37,7 +37,7 @@ export default function LoginScreen() {
       const credential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(credential);
 
-      router.push("/");
+      router.replace("/");
     } catch (err) {
       console.error("Login gagal:", err);
       Alert.alert("Gagal login", "Coba lagi nanti.");
